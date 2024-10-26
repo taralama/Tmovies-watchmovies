@@ -1,22 +1,64 @@
 import React from "react";
-import { MdLocalMovies } from "react-icons/md";
+import { useForm,SubmitHandler  } from "react-hook-form";
+import { IoSearchSharp } from "react-icons/io5";
 import { GiHamburgerMenu } from "react-icons/gi";
 
+interface Prop {
+  func: (name: string) => void;
+}
 
+interface FormData {
+  moviename: string;
+}
 
 
 import "../index.css";
 
-const Navbar: React.FC = () => {
-  console.log("hello");
+const Navbar: React.FC<Prop> = (props) => {
+  const { register, handleSubmit } = useForm({
+    defaultValues: {
+      moviename: "",
+    }
+  });
+
+  const onSubmit:SubmitHandler<FormData>=(data: { moviename: string }) => {
+    console.log(data, "is typing");
+    props.func(data.moviename);
+  };
+
   return (
     <>
-      <div className="h-14 p-1  flex justify-between shadow-lg shadow-black-*00 items-center">
-        <nav className=" hover:bg-slate-700 hover:cursor-pointer rounded-full h-10 w-10 flex justify-center items-center"> <GiHamburgerMenu className="text-white"/></nav>
-        <h1 className="text-4xl text-blue-500 font-serif items-center">T movies</h1>
-        <input type="text" placeholder="Search Movies" className="sm:w-20 lg:w-80 p-2 focus:outline-none transition-all font-serif " /><MdLocalMovies className=" absolute right-5 z-10 text-blue-600"/>
-      </div>
+      <div className="h-16 px-1  flex justify-between  border-slate-800 shadow-md shadow-slate-800 items-center ">
+        <h1 className="text-4xl text-blue-500 font-bold items-center ">
+          Movie Stream
+        </h1>
 
+        <ul className=" flex w-76 gap-3  font-mono text-slate-500 items-center">
+          <li>Home</li>
+          <li>Popular</li>
+          <li>New</li>
+          <li>High Rating</li>
+        </ul>
+
+        <ul className="flex items-center gap-2">
+          <li>
+            <IoSearchSharp className="text-yellow-500" />
+          </li>
+          <li>
+            <form onChange={handleSubmit(onSubmit)}>
+              <input
+                className="bg-slate-700 font-mono w-72 px-5 rounded-md text-slate-400 focus:outline-none"
+                placeholder="search movies ..."
+                {...register("moviename")}
+              />
+            </form>
+          </li>
+        </ul>
+
+        <nav className=" hover:bg-slate-700 hover:cursor-pointer rounded-full h-10 w-10 flex justify-center items-center">
+          <GiHamburgerMenu className="text-white" />
+        </nav>
+      </div>
     </>
   );
 };
